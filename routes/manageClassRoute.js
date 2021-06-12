@@ -3,7 +3,7 @@ const courseSchema = require("../models/classModel");
 const userSchema = require("../models/userModel");
 
 //middleware for permission acoording to roles
-const { authUser } = require("../middleware/authUser");
+const { authInstructor } = require("../middleware/authUser");
 
 const router = express.Router();
 
@@ -11,33 +11,37 @@ const router = express.Router();
   /*  To create a course
    */
 }
-router.post("/instructor/create-new-course", authUser, async (req, res) => {
-  try {
-    //instructorId to be sent by clientside which was stored in session storage after login
-    const { title, userId, courseDuration, courseCharge, studentsEnrolled } =
-      req.body;
-    const instructorName = await userSchema.findById(userId);
-    const createdClass = await courseSchema.create({
-      title: title,
-      instructorId: userId,
-      instructorName: instructorName.name,
-      courseDuration: courseDuration,
-      courseCharge: courseCharge,
-      studentsEnrolled: studentsEnrolled,
-    });
-    res.send({
-      status: 0,
-      msg: "course created successfully",
-      data: createdClass,
-    });
-  } catch (error) {
-    res.send({
-      status: 1,
-      msg: error,
-      data: null,
-    });
+router.post(
+  "/instructor/create-new-course",
+  authInstructor,
+  async (req, res) => {
+    try {
+      //instructorId to be sent by clientside which was stored in session storage after login
+      const { title, userId, courseDuration, courseCharge, studentsEnrolled } =
+        req.body;
+      const instructorName = await userSchema.findById(userId);
+      const createdClass = await courseSchema.create({
+        title: title,
+        instructorId: userId,
+        instructorName: instructorName.name,
+        courseDuration: courseDuration,
+        courseCharge: courseCharge,
+        studentsEnrolled: studentsEnrolled,
+      });
+      res.send({
+        status: 0,
+        msg: "course created successfully",
+        data: createdClass,
+      });
+    } catch (error) {
+      res.send({
+        status: 1,
+        msg: error,
+        data: null,
+      });
+    }
   }
-});
+);
 
 {
   /*  To view all the courses created by the instructor
@@ -65,7 +69,7 @@ router.post("/instructor/get-all-course", async (req, res) => {
    */
 }
 
-router.post("/instructor/edit-course", authUser, async (req, res) => {
+router.post("/instructor/edit-course", authInstructor, async (req, res) => {
   try {
     const { courseId, title, courseDuration, courseCharge } = req.body;
     await courseSchema.findByIdAndUpdate(courseId, {
@@ -91,7 +95,7 @@ router.post("/instructor/edit-course", authUser, async (req, res) => {
   /* To remove a course which was created earlier
    */
 }
-router.post("/instructor/remove-course", authUser, async (req, res) => {
+router.post("/instructor/remove-course", authInstructor, async (req, res) => {
   try {
     const { toBeDeleatedId } = req.body;
     const removedCourse = await courseSchema.findByIdAndDelete(toBeDeleatedId);
@@ -113,7 +117,7 @@ router.post("/instructor/remove-course", authUser, async (req, res) => {
    */
 }
 
-router.post("/instructor/add-student", authUser, async (req, res) => {
+router.post("/instructor/add-student", authInstructor, async (req, res) => {
   try {
     const { courseId, studentId } = req.body;
     const result = await courseSchema.findById(courseId);
@@ -132,7 +136,7 @@ router.post("/instructor/add-student", authUser, async (req, res) => {
   /* To remove a student from the course, the parameters received is the course ID and student ID
    */
 }
-router.post("/instructor/remove-student", authUser, async (req, res) => {
+router.post("/instructor/remove-student", authInstructor, async (req, res) => {
   try {
     const { courseId, studentId } = req.body;
     const result = await courseSchema.findById(courseId);

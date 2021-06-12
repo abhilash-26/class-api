@@ -1,10 +1,10 @@
 const express = require("express");
 const courseSchema = require("../models/classModel");
-const userSchema = require("../models/userModel");
 const router = express.Router();
+const { authStudent } = require("../middleware/authUser");
 
 //To get all the courses and the corosponding instructors
-router.post("/student/view-course", async (req, res) => {
+router.post("/student/view-course", authStudent, async (req, res) => {
   try {
     let courses = [];
 
