@@ -7,18 +7,17 @@ const viewCourseRoute = require("./routes/viewCourseRoute");
 
 const app = express();
 
+require("dotenv").config();
+
 app.use(express.json());
 
 mongoose
-  .connect(
-    "mongodb+srv://task1:task1@cluster0.ramnh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    }
-  )
+  .connect(process.env.db_url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
   .then(() => {
     console.log("Connected To the database");
   })
