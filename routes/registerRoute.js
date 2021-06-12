@@ -13,7 +13,7 @@ router.post("/user/register", async (req, res) => {
     });
     if (savedemail) return res.send({ message: "email is already in use" });
 
-    //hash the password
+    //hash the password using bcryptjs library
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 

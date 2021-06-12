@@ -3,6 +3,7 @@ const courseSchema = require("../models/classModel");
 const userSchema = require("../models/userModel");
 const router = express.Router();
 
+//To get all the courses and the corosponding instructors
 router.post("/student/view-course", async (req, res) => {
   try {
     let courses = [];
