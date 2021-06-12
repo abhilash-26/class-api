@@ -20,7 +20,7 @@ router.post("/student/view-course", async (req, res) => {
     });
     res.send({
       status: 0,
-      msg: "The courses along with the instructors are ",
+      msg: "The courses along with the corrosponding instructors are ",
       data: courses,
     });
   } catch (error) {
